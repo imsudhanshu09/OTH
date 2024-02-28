@@ -1,13 +1,50 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* index.css */
+
+/* Styles for SignUp and Login links in the navigation bar */
+.navbar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1; /* Ensure the navbar appears above the background */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: rgb(128, 175, 228); /* Set color to gold */
+  font-size: 1.2rem; /* Increase font size */
+  padding: 12px 20px; /* Adjust padding */
+  border-radius: 8px; /* Adjust border radius */
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.navbar ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  animation: twinkling 1s infinite;
+}
+
+.navbar ul li a:active {
+  transform: scale(0.9);
+}
+
+@keyframes twinkling {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
