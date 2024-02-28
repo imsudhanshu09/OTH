@@ -131,3 +131,19 @@
   background-clip: text; /* Clip the text to the background gradient */
   -webkit-text-fill-color: transparent; /* Make the text transparent to reveal the gradient */
 }
+
+@media screen and (max-width: 768px) {
+  /* Adjust styles for smaller screens */
+  .welcome-message {
+    margin-top: 10vh;
+  }
+  .welcome-message h1 {
+    font-size: 6vw;
+  }
+  .welcome-message p {
+    font-size: 3vw;
+  }
+  .welcome-message span {
+    font-size: 7vw;
+  }
+}
