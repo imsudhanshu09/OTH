@@ -1,0 +1,149 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+  }
+  
+  .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0; /* Remove any margins */
+    padding: 0;
+    background-color: #000; /* Set background color to black */
+    z-index: -1;
+  }
+  
+  .star {
+    position: absolute;
+    width: 0.2vw; /* Adjust size of stars using vw for responsiveness */
+    height: 0.2vw; /* Adjust size of stars using vw for responsiveness */
+    background-color: #fff; /* Set color of stars to white */
+    border-radius: 50%; /* Make stars round */
+    animation: twinkling 3s infinite; /* Apply animation to stars */
+  }
+  
+  .sun {
+    position: absolute;
+    top: 10%;
+    left: 5%; /* Adjust position of sun to the left */
+    width: 40vw; /* Adjust size of sun using vw for responsiveness */
+    height: 40vw; /* Adjust size of sun using vw for responsiveness */
+    border-radius: 50%; /* Make sun round */
+    background: radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.8) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.4) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.3) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.2) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.1) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.05) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.025) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at 20% 30%,
+        rgba(255, 255, 255, 0.0125) 10%,
+        rgba(255, 255, 255, 0) 70%
+      ); /* Add radial gradient for 3D effect */
+    animation: rotateSun 10s linear infinite; /* Rotate sun */
+  }
+  
+  @keyframes twinkling {
+    0% {
+      opacity: 0; /* Initially set stars to invisible */
+    }
+    50% {
+      opacity: 1; /* Set stars to visible */
+    }
+    100% {
+      opacity: 0; /* Set stars to invisible */
+    }
+  }
+  
+  @keyframes rotateSun {
+    100% {
+      transform: rotate(360deg); /* Rotate sun 360 degrees */
+    }
+  }
+  
+  .welcome-message {
+    text-align: center;
+    margin-top: 20vh; /* Adjust margin from the top */
+    margin-bottom: 40px; /* Add some spacing */
+    padding: 20px; /* Add padding for better readability */
+    border-radius: 10px; /* Add border radius for rounded corners */
+  }
+  
+  .welcome-message h1 {
+    font-size: 3vw; /* Adjust font size using vw for responsiveness */
+    font-family: 'Raleway', sans-serif; /* Set font family */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow for depth */
+    background: linear-gradient(to right, #FF6347, #FFA07A); /* Gradient text */
+    background-clip: text; /* Clip the text to the background gradient */
+    -webkit-text-fill-color: transparent; /* Make the text transparent to reveal the gradient */
+    margin-top: -10vh;
+  }
+  
+  .welcome-message p {
+    font-size: 1.5vw; /* Adjust font size using vw for responsiveness */
+    font-family: 'Roboto', sans-serif; /* Set font family */
+    color: #ffffff; /* Set color to white */
+    margin-top: 10px; /* Add some margin from the top */
+    opacity: 0.8; /* Adjust opacity to make it slightly transparent */
+  }
+  
+  .welcome-message span {
+    font-size: 3.5vw; /* Adjust font size using vw for responsiveness */
+    font-family: 'Arial', sans-serif; /* Set font family */
+    font-weight: bold; /* Set font weight to bold */
+    background: linear-gradient(to right, #FF6347, #FFA07A); /* Gradient text */
+    background-clip: text; /* Clip the text to the background gradient */
+    -webkit-text-fill-color: transparent; /* Make the text transparent to reveal the gradient */
+  }
+  
+  @media screen and (max-width: 768px) {
+    /* Adjust styles for smaller screens */
+    .welcome-message {
+      margin-top: 10vh;
+    }
+    .welcome-message h1 {
+      font-size: 6vw;
+    }
+    .welcome-message p {
+      font-size: 3vw;
+    }
+    .welcome-message span {
+      font-size: 7vw;
+    }
+  }
