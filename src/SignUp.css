@@ -56,9 +56,16 @@
     font-size: 1.0vw; 
     background-color: rgba(0, 0, 0, 0.3);
   }
+
   .input-group input:hover,
   .input-group input:focus {
-    background-color: #a09d9d; /* Change background color on hover and focus */
+    background-color: #a09d9d; /* Change background color on hover, focus, or when input has a value */
+  }
+
+  
+
+  .input-group input:valid {
+    background-color: #a09d9d; /* Change background color when input is valid (has a value) */
   }
   
   .signup-form button[type="submit"] {

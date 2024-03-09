@@ -1,10 +1,10 @@
-// SignUp.jsx
-
 import React, { useState } from 'react';
-import { Link, } from 'react-router-dom'; // Import Link from react-router-dom
+import axios from 'axios';
+import { Link,useNavigate } from 'react-router-dom'; // Import Link from react-router-dom
 import './SignUp.css';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -17,23 +17,31 @@ const SignUp = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Backend signup logic goes here
-    console.log(formData);
-    // Reset form after submission
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
+    console.log("Form submitted with data:", formData);
+    try {
+      const response = await axios.post('http://localhost:3000/SignUp', formData);
+      console.log("Server response:",response.data); // Log server response
+      navigate('/Login');
+      // Reset form after successful signup
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+    } catch (error) {
+      console.error('Error during signup:', error.response.data);
+      // Handle error (e.g., display error message to user)
+    }
   };
+  
 
   return (
     <div className="signup-container">
       <h2 className="signup-title"></h2>
-      <form className="signup-form" onSubmit={handleSubmit}>
+      <form action="/SignUp" method="POST" className="signup-form" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="username">Username:</label>
           <input
@@ -62,7 +70,7 @@ const SignUp = () => {
           <input
             type="password"
             id="password"
-            minlength="8"
+            minLength="8"
             name="password"
             value={formData.password}
             onChange={handleChange}
@@ -74,7 +82,7 @@ const SignUp = () => {
           <input
             type="password"
             id="confirmPassword"
-            minlength="8"
+            minLength="8"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
