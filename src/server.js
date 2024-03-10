@@ -1,20 +1,25 @@
-// server.js
-
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import passport from "passport";
-import { Strategy } from "passport-local";
 import session from "express-session";
 import env from "dotenv";
 import cors from "cors";
 
-
 const app = express();
-app.use(cors())
+app.use(express.json())
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-const port = 3000;
+const port = 3001;
 const saltRounds = 10;
 env.config();
 
@@ -22,7 +27,10 @@ app.use(
     session({
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
+      cookie: {
+        expires: 24 * 60 * 60 * 1000,
+      }  
     })
 );
 
@@ -45,24 +53,49 @@ db.connect();
 
 
 app.get("/Login", (req, res) => {
-  res.send("/Login"); 
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
 });
 
-
 // Routes
-app.post(
-    "/Login",
-    passport.authenticate("local", {
-      successRedirect: console.log("/main page"),
-      failureRedirect: "/Login",
-    })
-  );
+app.post("/Login", async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  try {
+    const result = await db.query("SELECT * FROM users WHERE email = $1 ", [
+      email,
+    ]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      const storedHashedPassword = user.password;
+      bcrypt.compare(password, storedHashedPassword, (err, response) => {
+        if (response) {
+          req.session.user = result;
+          console.log(req.session.user);
+          res.send(result);
+        } else {
+          res.send({ message: "Wrong username/password combination!" });
+        }
+      });
+    } else {
+      res.send({ message: "User doesn't exist" });
+    }
+  } catch (err) {
+    console.log(err);
+    return cb(err);
+  }
+});
 
 app.post("/SignUp", async (req, res) => {
   const username=req.body.username;
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+
   if (password !== confirmPassword) {
     return res.status(400).json({ error: "Passwords do not match" });
   }
@@ -73,7 +106,7 @@ app.post("/SignUp", async (req, res) => {
     
     if (checkResult.rows.length > 0) {
       console.log("User already exists. Redirecting to login...");
-      res.redirect("/Login");
+      res.send({status:true});
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -89,8 +122,7 @@ app.post("/SignUp", async (req, res) => {
                 console.error("Error logging in:", err);
               } else {
                 console.log("Success");
-                
-                res.redirect("/Login");
+                res.send({status:true});
               }
             });
           }
@@ -100,45 +132,6 @@ app.post("/SignUp", async (req, res) => {
       console.log(err);
     }
   });
-
-passport.use(
-  "local",
-  new Strategy(async function verify(email, password, cb) {
-    try {
-      const result = await db.query("SELECT * FROM users WHERE email = $1 ", [
-        email,
-      ]);
-      if (result.rows.length > 0) {
-        const user = result.rows[0];
-        const storedHashedPassword = user.password;
-        bcrypt.compare(password, storedHashedPassword, (err, valid) => {
-          if (err) {
-            console.error("Error comparing passwords:", err);
-            return cb(err);
-          } else {
-            if (valid) {
-              return cb(null, user);
-            } else {
-              return cb(null, false);
-            }
-          }
-        });
-      } else {
-        return cb("User not found");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  })
-);  
-
-passport.serializeUser((user, cb) => {
-    cb(null, user);
-});
-  
-passport.deserializeUser((user, cb) => {
-    cb(null, user);
-});
 
 // Start server
 app.listen(port, () => {

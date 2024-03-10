@@ -21,9 +21,9 @@ const SignUp = () => {
     e.preventDefault();
     console.log("Form submitted with data:", formData);
     try {
-      const response = await axios.post('http://localhost:3000/SignUp', formData);
-      console.log("Server response:",response.data); // Log server response
-      navigate('/Login');
+      const response = await axios.post('http://localhost:3001/SignUp', formData);
+        console.log("Server response:",response.status);
+        navigate('/Login');
       // Reset form after successful signup
       setFormData({
         username: '',
@@ -32,8 +32,7 @@ const SignUp = () => {
         confirmPassword: ''
       });
     } catch (error) {
-      console.error('Error during signup:', error.response.data);
-      // Handle error (e.g., display error message to user)
+      console.error('Error during signup:', error);
     }
   };
   
@@ -62,6 +61,8 @@ const SignUp = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            pattern= "^[\w-]+(\.[\w-]+)*@(gmail\.com|cse\.iiitp\.ac\.in|ece\.iiitp\.ac\.in)$"
+            title="Please enter a valid email address"
             required
           />
         </div>

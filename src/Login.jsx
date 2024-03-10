@@ -1,30 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  axios.defaults.withCredentials = true;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted with data:", formData);
     try {
-      const response = await axios.post('http://localhost:3000/Login', formData);
-      console.log('Login successful:', response.data);
-      // Redirect to dashboard or another page upon successful login
+      const response = await axios.post('http://localhost:3001/Login', formData);
+        console.log('Login response:', response.data.message);
+        if(response.data.message){
+          // Redirect to dashboard or another page upon successful login
+          setLoginError(response.data.message);
+        }
+        else{
+          setLoginError("Login failed. Please check your credentials.");
+        }
     } catch (error) {
-      console.error('Error during login:', error.response.data);
-      // Handle login error (e.g., display error message to user)
+      console.error('Error during login:', error);
+      setLoginError("Error during login. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/Login").then((response) => {
+      if (response.data.loggedIn == true) {
+        setLoginError(response.data.user);
+      }
+    }).catch((error) => {
+      console.error('Error fetching user data:', error);
+    });
+  }, []);
 
   return (
     <div className="login-container">
