@@ -9,6 +9,8 @@ import './App.css';
 import './index.css';
 import Login from './Login.jsx'
 import SignUp from "./SignUp.jsx"
+import QuestionPage from "./QuestionPage.jsx";
+
 
 function App() {
   useEffect(() => {
@@ -23,7 +25,6 @@ function App() {
       container.appendChild(star);
     }
   }, []);
-
 
   return(
       <Router>
@@ -46,7 +47,8 @@ function App() {
           </div>
           <Routes>
             <Route path="/SignUp" element={<SignUp />}/>
-            <Route path="/Login" element={<Login />}/> 
+            <Route path="/Login" element={<Login />}/>
+            <Route path="/QuestionPage" element={<QuestionPage />}/>  
           </Routes>
         </div>
       </Router>    

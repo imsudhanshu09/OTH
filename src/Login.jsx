@@ -22,10 +22,10 @@ const Login = () => {
     console.log("Form submitted with data:", formData);
     try {
       const response = await axios.post('http://localhost:3001/Login', formData);
-        console.log('Login response:', response.data.message);
-        if(response.data.message){
+        console.log('Login response:', response);
+        if(response.data.status){
           // Redirect to dashboard or another page upon successful login
-          setLoginError(response.data.message);
+          navigate('/QuestionPage');
         }
         else{
           setLoginError("Login failed. Please check your credentials.");
