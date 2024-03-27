@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
-import passport from "passport";
+//import passport from "passport";
 import session from "express-session";
 import env from "dotenv";
 import cors from "cors";
@@ -27,9 +27,12 @@ app.use(
     session({
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie: {
-        expires: 24 * 60 * 60 * 1000, // 24 hrs
+        maxAge: 72 * 60 * 60 * 1000, // 72 hrs
+        httpOnly: false,
+        // secure: true, // Enable this if using HTTPS
+        // sameSite: "strict",
       }  
     })
 );
@@ -38,8 +41,8 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Database configuration
 const db = new pg.Client({
@@ -73,6 +76,13 @@ const initializeUserProgress = (req, res, next) => {
 };
 
 app.use(initializeUserProgress);
+
+const requireLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
+  next();
+};
 
 app.get("/Login", (req, res) => {
   if (req.session.user) {
@@ -157,12 +167,12 @@ app.post("/SignUp", async (req, res) => {
 });
 
 // Middleware function to check if user is logged in
-const requireLogin = (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(401).send({ error: "Unauthorized" });
-  }
-  next();
-};
+// const requireLogin = (req, res, next) => {
+//   if (!req.session.userId) {
+//     return res.status(401).send({ error: "Unauthorized" });
+//   }
+//   next();
+// };
 
 // Define route to fetch questions
 app.get("/questions", requireLogin, async (req, res) => {

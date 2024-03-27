@@ -14,7 +14,7 @@ const QuestionPage = () => {
 
   const fetchNextQuestion = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/questions');
+      const response = await axios.get('http://localhost:3001/questions', { withCredentials: true });
       if (response.data.message) {
         // If the response contains a message, it means all questions are answered
         setQuestion(null);
@@ -30,7 +30,7 @@ const QuestionPage = () => {
   
   const handleAnswerSubmit = async () => {
     try {
-      const response = await axios.post(`http://localhost:3001/questions/${question.id}/answer`, { answer });
+      const response = await axios.post(`http://localhost:3001/questions/${question.id}/answer`, { answer }, { withCredentials: true });
       if (response.data.correct) {
         setFeedback('Correct! Moving to the next question.');
         // Fetch the next question after a correct answer
@@ -52,7 +52,14 @@ const QuestionPage = () => {
           <h1 className="question-title">Question {question.id}</h1>
           <p className="question-text">{question.question_text}</p>
           {/* Optionally display an image if available */}
-          {question.image_url && <img src={question.image_url} alt="Question" className="question-image" />}
+          {question.image_url && (
+           <img 
+            src={question.image_url} 
+            alt="Question"
+            className="question-image"
+            onError={(e) => console.error('Error loading image: ', question.image_url )}
+           />
+           )}
           <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} className="answer-input" />
           <button onClick={handleAnswerSubmit} className="submit-button">Submit Answer</button>
           <p className="feedback-message">{feedback}</p>
